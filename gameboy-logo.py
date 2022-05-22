@@ -33,7 +33,7 @@ def read_rom(rom: Path, bmp: Path) -> None:
     print(pretty_hex(logo, width=6), end="\n\n")
 
     try:
-        Image.frombytes("1", (48, 8), logo).save(bmp)
+        Image.frombytes("1", (48, 8), logo).save(bmp, format="bmp")
     except Exception as e:
         print("Could not write decoded logo:", e)
         exit(1)
