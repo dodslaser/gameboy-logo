@@ -9,12 +9,16 @@ def pretty_hex(b: bytes, width: int = 16) -> str:
 
 
 def read_rom(rom: Path, bmp: Path) -> None:
-    with open(rom, "rb") as f:
-        f.seek(0x104)
-        header = f.read(48)
-
-    print(f"Read encoded logo from {rom.name}:")
-    print(pretty_hex(header, width=6), end="\n\n")
+    try:
+        with open(rom, "rb") as f:
+            f.seek(0x104)
+            header = f.read(48)
+    except Exception as e:
+        print("Could not read header from ROM:", e)
+        exit(1)
+    else:
+        print(f"Read encoded logo from {rom.name}:")
+        print(pretty_hex(header, width=6), end="\n\n")
 
     logo = bytes(
         # Combine nibbles of every other byte
@@ -28,12 +32,21 @@ def read_rom(rom: Path, bmp: Path) -> None:
     print("Decoded logo:")
     print(pretty_hex(logo, width=6), end="\n\n")
 
-    print(f"Writing decoded logo to {bmp}")
-    Image.frombytes("1", (48, 8), logo).save(bmp)
+    try:
+        Image.frombytes("1", (48, 8), logo).save(bmp)
+    except Exception as e:
+        print("Could not write decoded logo:", e)
+        exit(1)
+    else:
+        print(f"Wrote decoded logo to {bmp}")
 
 
 def write_rom(rom: Path, bmp: Path) -> None:
-    logo = Image.open("mylogo.bmp").tobytes()
+    try:
+        logo = Image.open("mylogo.bmp").tobytes()
+    except Exception as e:
+        print("Could not read decoded logo:", e)
+        exit(1)
 
     print(f"Read decoded logo from {bmp.name}:")
     print(pretty_hex(logo, width=6), end="\n\n")
@@ -50,10 +63,15 @@ def write_rom(rom: Path, bmp: Path) -> None:
     print("Encoded logo:")
     print(pretty_hex(header, width=6), end="\n\n")
 
-    print(f"Writing encoded logo to {rom}")
-    # Generate a valid gameboy rom by padding with 0x00 to fill out the header
-    with open("mylogo.gb", "wb") as f:
-        f.write(bytes(260) + header + bytes(28))
+    try:
+        with open("mylogo.gb", "wb") as f:
+            # Generate a valid gameboy rom by padding with 0x00 to fill out the header
+            f.write(bytes(260) + header + bytes(28))
+    except Exception as e:
+        print("Could not write encoded logo:", e)
+        exit(1)
+    else:
+        print(f"Writing encoded logo to {rom}")
 
 
 if __name__ == "__main__":
