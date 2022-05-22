@@ -1,0 +1,2 @@
+# Read/write BMP image data
+Pillow
