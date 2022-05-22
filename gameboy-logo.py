@@ -64,7 +64,7 @@ def write_rom(rom: Path, bmp: Path) -> None:
     print(pretty_hex(header, width=6), end="\n\n")
 
     try:
-        with open("mylogo.gb", "wb") as f:
+        with open(rom, "wb") as f:
             # Generate a valid gameboy rom by padding with 0x00 to fill out the header
             f.write(bytes(260) + header + bytes(28))
     except Exception as e:
