@@ -3,12 +3,12 @@ from pathlib import Path
 from PIL import Image
 
 
-def pretty_hex(b, width=16):
+def pretty_hex(b: bytes, width: int = 16) -> str:
     pretty = (b[i:i + width].hex(" ") for i in range(0, len(b), width))
     return "\n".join(pretty)
 
 
-def read_rom(rom, bmp):
+def read_rom(rom: Path, bmp: Path) -> None:
     with open(rom, "rb") as f:
         f.seek(0x104)
         header = f.read(48)
@@ -32,7 +32,7 @@ def read_rom(rom, bmp):
     Image.frombytes("1", (48, 8), logo).save(bmp)
 
 
-def write_rom(rom, bmp):
+def write_rom(rom: Path, bmp: Path) -> None:
     logo = Image.open("mylogo.bmp").tobytes()
 
     print(f"Read decoded logo from {bmp.name}:")
