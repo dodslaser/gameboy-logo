@@ -43,7 +43,7 @@ def read_rom(rom: Path, bmp: Path) -> None:
 
 def write_rom(rom: Path, bmp: Path) -> None:
     try:
-        logo = Image.open("mylogo.bmp").tobytes()
+        logo = Image.open(bmp).tobytes()
     except Exception as e:
         print("Could not read decoded logo:", e)
         exit(1)
